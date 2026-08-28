@@ -7,7 +7,7 @@ models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="API Hydro-Logic")
 
-def hitung_prioritas(kelembapan: float, candangan_air: float) -> str:
+def hitung_prioritas(kelembapan: float, cadangan_air: float) -> str:
     """
     Ini adalah inti dari Smart Water Priority (SWP).
     """
@@ -18,7 +18,7 @@ def hitung_prioritas(kelembapan: float, candangan_air: float) -> str:
     else:
         return "🟢 Aman - Tidak Perlu Distribusi Air"
 
-@app.post("/api/sensor_data", response_model=models.DataKeluarResponse)
+@app.post("/api/sensor-data", response_model=models.DataKeluarResponse)
 def terima_data_sensor(data: models.DataMasukIoT, db: Session = Depends(get_db)):
     status_spk = hitung_prioritas(data.kelembapan_tanah, data.level_air_cadangan)
 
@@ -34,7 +34,7 @@ def terima_data_sensor(data: models.DataMasukIoT, db: Session = Depends(get_db))
     db.refresh(db_data)
 
     if "Kritis" in status_spk:
-        print(f"\n[TELEGRAM BOT MENGIRIM PESAN] 🚨 PERINGATAN KWT:")
+        print(f"\n[TELEGRAM BOT MENGIRIM PESAN] 🚨 PERINGATAN:")
         print(f"Tanah di {data.sektor_lahan} sangat kering ({data.kelembapan_tanah}%). Segera buka katup air ke sektor ini!\n")
 
     return db_data
